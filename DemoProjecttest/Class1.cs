@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 using TestingTask1;
-namespace DemoProjecttest
+
+namespace DemoProjectTest
 {
     [TestFixture]
     public class Class1
@@ -21,6 +22,7 @@ namespace DemoProjecttest
             Assert.That(y, Is.EqualTo("Login successful , Welcome Admin"));
             Assert.That(z, Is.EqualTo("Login failed"));
         }
+
         [Test]
         public void CheckDetails()
         {
@@ -34,8 +36,9 @@ namespace DemoProjecttest
                 Assert.That(item.Gender, Is.Not.Null);
             }
         }
+
         [Test]
-        public void GetuserDetails() 
+        public void GetuserDetails()
         {
             Program p = new Program();
             var x = p.GetEmployees(1);
@@ -46,7 +49,50 @@ namespace DemoProjecttest
                 Assert.That(item.Gender, Is.EqualTo("Male"));
                 Assert.That(item.Salary, Is.EqualTo(1000));
             }
+        }
 
+        [Test]
+        public void TestLoginWithNullUsernameAndPassword()
+        {
+            Program p = new Program();
+            string result = p.Login(null, null);
+            Assert.That(result, Is.EqualTo("Username or password are empty"));
+        }
+
+        [Test]
+        public void TestLoginWithValidUsernameAndInvalidPassword()
+        {
+            Program p = new Program();
+            string result = p.Login("Admin", "WrongPassword");
+            Assert.That(result, Is.EqualTo("Login failed"));
+        }
+
+        [Test]
+        public void TestGetEmployeeDetailsByIdNotFound()
+        {
+            Program p = new Program();
+            var result = p.GetEmployees(999); 
+            Assert.That(result, Is.Empty); 
+        }
+
+        [Test]
+        public void TestAllUsersWithEmptyList()
+        {
+            Program p = new Program();
+            List<Employee> users = p.AllUsers();
+            Assert.That(users, Is.Not.Empty); 
+        }
+
+        [Test]
+        public void TestEmployeeSalaryRange()
+        {
+            Program p = new Program();
+            var employees = p.AllUsers();
+            foreach (var employee in employees)
+            {
+                Assert.That(employee.Salary, Is.GreaterThanOrEqualTo(100));
+                Assert.That(employee.Salary, Is.LessThanOrEqualTo(10000));
+            }
         }
     }
 }
